@@ -1,6 +1,12 @@
+<!--
+ * @Author: yangzp
+ * @Description: 
+ * @Date: 2022-10-03 17:28:40
+ * @FilePath: \trade-web\src\views\goods\goodsList.vue
+-->
 <template>
     <div>
-        goodsList
+        goodsList     {{user}}
     </div>
 </template>
 <script>
@@ -13,17 +19,12 @@ export default {
         }
     },
     created(){
-        this.checkIfLogin();
     },
     methods:{
-        checkIfLogin(){
-            console.log(user);
-            if(null == user){
-                this.$router.push({
-                    path:'/'
-                });
-            }
-        }
-    }
+        
+    },  
+    computed: {
+        
+    },
 }
 </script>

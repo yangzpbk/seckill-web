@@ -30,11 +30,13 @@
     <el-row>
       <el-button type="info" @click="resetForm">重置</el-button>
       <el-button type="success" @click="loginSubmit">提交</el-button>
+      <el-button type="success" @click="qryUserInfo">校验</el-button>
     </el-row>
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
   name: 'Login',
   data() {
@@ -42,9 +44,10 @@ export default {
       msg: 'Welcome to Your SecKill App',
       icon: "el-input__icon el-icon-view",
       passwd: "password",
+      ticket: "",
       loginForm: {
-        password: "",
-        account: ""
+        account: "17744656892",
+        password: "12345678"
       },
       rules: {
         account: [
@@ -60,36 +63,40 @@ export default {
   methods: {
     loginSubmit() {
       this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          // 制造混淆的密码
-          var salt = "ayzbyzp123";
-          var inputPass = salt.charAt(0) + this.loginForm.password + salt.charAt(1) + salt.charAt(3);
-          // console.log(inputPass);
-          var password = this.$md5(inputPass);
+        // if (valid) {
 
-          const inParam = {
-            data: {
-              account: this.loginForm.account,
-              password: password
-            }
+        // } else {
+        //   console.log('error submit!!');
+        //   return false;
+        // }
+
+        // 制造混淆的密码
+        var salt = "ayzbyzp123";
+        var inputPass = salt.charAt(0) + this.loginForm.password + salt.charAt(1) + salt.charAt(3);
+        // console.log(inputPass);
+        var password = this.$md5(inputPass);
+
+        const inParam = {
+          data: {
+            account: this.loginForm.account,
+            password: password
           }
-          this.$post(this.secKillApi.common.toLogin, { ...inParam }).then(r => {
-            // console.log(r);
-            if (r.data.code !== 200) {
-              this.$message.error("错误信息：" + r.data.message);
-              return;
-            }
-            this.$message.success("登录成功：" + r.data.message);
-            this.$router.push({
-              path: "/user/userList"
-            })
-          })
-        } else {
-          console.log('error submit!!');
-          return false;
         }
+        this.$post(this.secKillApi.common.toLogin, { ...inParam }).then(r => {
+          // console.log(r);
+          if (r.data.code !== 200) {
+            this.$message.error("错误信息：" + r.data.message);
+            return;
+          }
+          if (!r.data.outData) {
+            this.ticket = r.data.outData.ticket;
+          }
+          this.$message.success("登录成功：" + r.data.message);
+          // this.$router.push({
+          //   path: "/user/userList"
+          // })
+        })
       });
-
     },
     /**
      * 重置表单
@@ -110,7 +117,21 @@ export default {
         this.passwd = "text";
         this.icon = "el-input__icon el-icon-loading";
       };
-    }
+    },
+    /**
+     * 查询用户信息
+     */
+    qryUserInfo() {
+      const inParam ={
+        "ticket":"8252259f0c5f49f1b0bcf5c4243de5b6"
+      }
+      this.$post(this.secKillApi.user.ifLogin,{...inParam}).then(r => {
+        this.setUserInfo(r.data.outData.user)
+      })
+    },
+    ...mapMutations("user", {
+      setUserInfo: 'SET_USER_INFO'
+    })
   }
 }
 </script>

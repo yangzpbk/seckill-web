@@ -14,7 +14,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 import request from './utils/myRequest';
 import md5 from 'js-md5';
 import './style/index.css';
-import animated from 'animate.css'
+import animated from 'animate.css';
+import store from './store';
 
 
 import secKillApi from './api/secKillApi';
@@ -36,6 +37,7 @@ Vue.use(animated);
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
