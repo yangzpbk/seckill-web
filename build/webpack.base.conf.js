@@ -1,10 +1,16 @@
+/*
+ * @Author: yangzp
+ * @Description: 
+ * @Date: 2022-09-25 00:35:27
+ * @FilePath: \trade-web\build\webpack.base.conf.js
+ */
 'use strict'
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
@@ -35,6 +41,10 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
+      },
+      {
+        test: /\.sass$/,
+        loaders: ['style', 'css', 'sass']
       },
       {
         test: /\.js$/,
